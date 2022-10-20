@@ -1,6 +1,7 @@
 ﻿using BethanysPieShop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,13 @@ namespace BethanysPieShop.Controllers
     {
         private readonly IOrderRepository orderRepository;
         private readonly ShoppingCart shoppingCart;
+        private readonly ILogger<OrderController> logger;
 
-        public OrderController(IOrderRepository orderRepository, ShoppingCart shoppingCart)
+        public OrderController(IOrderRepository orderRepository, ShoppingCart shoppingCart, ILogger<OrderController> logger)
         {
             this.orderRepository = orderRepository;
             this.shoppingCart = shoppingCart;
+            this.logger = logger;
         }
         public IActionResult Checkout()
         {
@@ -38,6 +41,7 @@ namespace BethanysPieShop.Controllers
 
             if (ModelState.IsValid)
             {
+                logger.LogInformation("{FirstName} - Has checkout the orders", order.FirstName);
                 orderRepository.CreateOrder(order);
                 shoppingCart.ClearCart();
                 return RedirectToAction("CheckoutComplete");

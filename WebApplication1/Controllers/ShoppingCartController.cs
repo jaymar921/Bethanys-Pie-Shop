@@ -1,5 +1,6 @@
 ﻿using BethanysPieShop.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,13 @@ namespace BethanysPieShop.Controllers
     {
         private readonly IPieRepository _pieRepository;
         private readonly ShoppingCart _shoppingCart;
+        private readonly ILogger<ShoppingCartController> logger;
 
-        public ShoppingCartController(IPieRepository pieRepository, ShoppingCart shoppingCart)
+        public ShoppingCartController(IPieRepository pieRepository, ShoppingCart shoppingCart, ILogger<ShoppingCartController> logger)
         {
             _pieRepository = pieRepository;
             _shoppingCart = shoppingCart;
+            this.logger = logger;
         }
         
         public ViewResult Index()
@@ -37,6 +40,7 @@ namespace BethanysPieShop.Controllers
 
             if(selectedPie != null)
             {
+                logger.LogInformation("Someone added {PieName} to cart", selectedPie.Name);
                 _shoppingCart.AddToCart(selectedPie, 1);
             }
             return RedirectToAction("Index");

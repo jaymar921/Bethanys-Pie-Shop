@@ -29,6 +29,7 @@ namespace WebApplication1
             );
             services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<AppDbContext>();
 
+            
             // adding MVC support
             services.AddControllersWithViews();
 
